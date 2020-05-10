@@ -65,7 +65,7 @@ void postorder(Node* root){//非递归后序遍历
     Node *last=NULL;
     while(!s.empty()){
         Node *topNode=s.top();
-        
+
         if(topNode->left&&!flag){//向下访问左子节点
             s.push(topNode->left);
         }
@@ -78,10 +78,11 @@ void postorder(Node* root){//非递归后序遍历
             else{//开始回溯状态，打印当前结点的值，弹出当前结点
                 s.pop();
                 cout<<topNode->val<<" ";
-                last=topNode;
+                //last=topNode;
                 flag=1;
             }
         }
+        last=topNode;
     }
 }
 int main(){
