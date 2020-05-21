@@ -83,3 +83,127 @@ prim算法和kruskal算法
 可以使用动态规划也可以利用关键路径算法求。AOE.cpp是求关键路径。关键路径上的关键活动是不允许拖延的活动，这些活动的最早开始时间必须等于最迟开始时间。
 
 对于求矩阵嵌套的问题，就是构造图，然后求DAG最长路。或者可以对矩阵数据进行预处理，保证前面的矩阵一定不可包住后面的矩阵，而后面的矩阵可能包住前面的矩阵，然后使用求最长不降子序列的方法求。
+
+## 卡特兰数
+
+卡特兰数是组合数学中的一种著名数列，通常用如下通项式表示：
+
+​		f(n)=$\frac{C^n_{2n}}{n+1}$
+
+当然，卡特兰数也是有递推式的：
+
+​		f(n)=$\sum_{i=0}^{n-1}$f(i)*f(n-i-1)
+
+第一个通项式的变形为：
+
+​		f(n)=$C_{2n}^n$-$C_{2n}^{n-1}$
+
+其前几项为(从第零项开始): 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, 58786, 208012, 742900, 2674440, 9694845, 35357670, 129644790, 477638700,$\cdots$
+
+### 应用：
+
+**1、括号化问题**
+
+**2、出栈次序问题。一个栈(无穷大)的进栈序列为1、2、3、...、n，有多少个不同的出栈序列**
+
+类似：有2n个人排成一行进入剧场。入场费5元。其中只有n个人有一张5元钞票，另外n人只有10元钞票，剧院无其它钞票，问有多少中方法使得只要有10元的人买票，售票处就有5元的钞票找零？(将持5元者到达视作将5元入栈，持10元者到达视作使栈中某5元出栈)
+
+**3、给定结点组成二叉搜索数树**
+
+给定一个整数 *n*，求以 1 ... *n* 为节点组成的二叉搜索树有多少种
+
+```cpp
+int numTrees(int n) {
+    	//动态规划
+        // if(n==0) return 0;
+        // int num[n+1];
+        // memset(num,0,sizeof(num));
+        // num[0]=1;
+        // for(int i=1;i<=n;i++){
+        //     for(int j=1;j<=i;j++){
+        //         num[i]+=(num[j-1]*num[i-j]);
+        //     }
+        // }
+        // return num[n];
+    	
+    	//卡特兰数
+        long ans=1;
+        for(int i=1;i<=n;i++){
+            ans=2*(2*i-1)*ans/(i+1);
+        }
+        return (int)ans;
+    }
+```
+分别是哪几种?
+
+<img src="./pic/img2.png">
+
+*(图片来源 LeetCod e第 95 题)*
+
+~~~cpp
+class Solution {
+    struct TreeNode{
+        int val;
+ 		TreeNode *left;
+        TreeNode *right;
+        TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+    };
+    vector<TreeNode*> generateNode(int start,int end){
+        vector<TreeNode*> tmp;
+        if(start>end){
+           
+            tmp.push_back(NULL);
+            return tmp;
+        }
+        for(int i=start;i<=end;i++){
+            vector<TreeNode*> ltmp=generateNode(start,i-1);
+            vector<TreeNode*> rtmp=generateNode(i+1,end);
+            for(int j=0;j<ltmp.size();j++){
+                for(int k=0;k<rtmp.size();k++){
+                    TreeNode* node=new TreeNode(i);
+                    node->left=ltmp[j];
+                    node->right=rtmp[k];
+                    tmp.push_back(node);
+                }
+            }
+        }
+        return tmp;
+    }
+public:
+    vector<TreeNode*> generateTrees(int n) {
+        vector<TreeNode*> ans;
+        if(n==0) return ans;
+        TreeNode* tmp=new TreeNode(1);
+        return generateNode(1,n);
+    }
+};
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
